@@ -18,7 +18,7 @@ echo
 if [[ ! "$3" ]];
 then
     echo "$0 <balong family> <device overlay> <firmware directory>"
-    echo "Example: $0 v7r11 e8372h-153_zong_21.333.64.00.1456"
+    echo "Example: $0 v7r11 e8372h-153_zong_21.333.64.00.1456 orig_fw"
     exit 1
 fi
 
