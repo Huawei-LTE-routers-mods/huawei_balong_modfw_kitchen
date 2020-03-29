@@ -1,0 +1,2 @@
+#!/system/bin/busybox sh
+nohup /system/xbin/adbd &>/dev/null &
