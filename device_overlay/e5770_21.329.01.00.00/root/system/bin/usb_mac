@@ -1,0 +1,20 @@
+#!/system/bin/busybox sh
+set -e
+
+CFILE="/data/userdata/usb_mac"
+
+if [[ ! "$1" ]];
+then
+    echo "$0 [VALUE separated by colons :]"
+    echo "$0 0 to remove custom USB MAC address"
+    echo
+    echo -n "Current USB MAC: "
+    [ -f "$CFILE" ] && cat "$CFILE" || echo "stock (0C:5B:8F:27:9A:64)"
+    exit 1
+fi
+
+[[ "$1" == "0" ]] && rm "$CFILE" && exit 0
+echo "$1" | grep -E -q '^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$' || { echo "Wrong value!"; exit 2; }
+
+echo "$1" > "$CFILE"
+/system/etc/patch_usbmac.sh
