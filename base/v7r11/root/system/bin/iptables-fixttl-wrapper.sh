@@ -1,9 +1,10 @@
 #!/system/bin/busybox sh
 
 # This wrapper calls "fix_ttl.sh 2" to permit FORWARDed traffic
-# when "ip[6]tables -t mangle -F" is called by /app/bin/npdaemon.
-# Calling "fix_ttl.sh 2" and other iptables scripts in autorun
-# cause race condition.
+# when "ip[6]tables -t mangle -F" flushing rule is called by /app/bin/npdaemon.
+# Calling "fix_ttl.sh 2" or other scripts in autorun causes race condition, so we
+# "monitor" when the rules are flushed and call handlers which modify iptables
+# rules again to add or re-add them.
 
 /system/bin/${0##*/}.orig "$@"
 RETCODE="$?"

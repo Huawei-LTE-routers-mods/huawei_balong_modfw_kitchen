@@ -22,6 +22,7 @@ Features:
 * DNS over TLS resolver stubby (version 1.5.2, compiled with OpenSSL 1.0.2t) and DNS-level adblock (IPv4 only)
 * Unlock of all NVRAM items
 * AT^DATALOCK unlock patch
+* Unsigned kernel module loading patch (for 21.333+ firmware versions)
 * OpenVPN (version 2.4.8, compiled with OpenSSL 1.0.2t) and scripts for DNS redirection
 * curl (version 7.67.0, compiled with OpenSSL 1.0.2t)
 * Script for installing Entware application repository
