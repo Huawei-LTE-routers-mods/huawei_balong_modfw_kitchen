@@ -7,5 +7,4 @@
 # iam@valdikss.org.ru
 
 # Trigger OpenVPN reconnection
-# Uncomment to enable
-#killall -USR1 openvpn
+pidof openvpn && killall -USR1 openvpn
