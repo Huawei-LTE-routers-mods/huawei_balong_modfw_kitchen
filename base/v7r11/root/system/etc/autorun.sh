@@ -70,5 +70,8 @@ fi
 # Entware autorun
 [ -f /data/userdata/entware_autorun ] && /opt/etc/init.d/rc.unslung start
 
+# Custom web interface autorun
+[ -f /app/webroot/webui_init.sh ] && /app/webroot/webui_init.sh
+
 # fix_ttl.sh 2, dns_over_tls.sh and anticenshorship.sh are called
 # from /system/bin/iptables-fixttl-wrapper.sh by /app/bin/npdaemon.
