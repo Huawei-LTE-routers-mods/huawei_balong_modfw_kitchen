@@ -64,6 +64,7 @@ else
     # Non-OLED device. Uncomment to enable adb by default.
     # Adb could still be launched via telnet 'adb' command.
     #[ ! -f /data/userdata/adb_disable ] && adb
+    true
 fi
 
 # Entware autorun
