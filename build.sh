@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -x
 
 WORKDIR="workdir"
 BASEDIR="base"
@@ -27,6 +26,8 @@ then
     echo "Base directory or device directory not found!"
     exit 2
 fi
+
+set -x
 
 rm -rf "$WORKDIR/"
 mkdir "$WORKDIR/"
