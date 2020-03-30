@@ -53,8 +53,18 @@ busybox sysctl -p /system/etc/sysctl.conf
 
 [ ! -f /data/userdata/passwd ] && cp /system/usr/default_files/passwd_def /data/userdata/passwd
 [ ! -f /data/userdata/telnet_disable ] && telnetd -l login -b 0.0.0.0
-# Uncomment this to start adb on boot
-#[ ! -f /data/userdata/adb_disable ] && adb
+
+if [ -f /app/bin/oled_hijack/autorun.sh ];
+then
+    /app/bin/oled_hijack/autorun.sh
+    # Start adb if oled_hijack is present by default.
+    # Adb access would be blocked by default via remote_access oled_hijack script.
+    [ ! -f /data/userdata/adb_disable ] && adb
+else
+    # Non-OLED device. Uncomment to enable adb by default.
+    # Adb could still be launched via telnet 'adb' command.
+    #[ ! -f /data/userdata/adb_disable ] && adb
+fi
 
 # Entware autorun
 [ -f /data/userdata/entware_autorun ] && /opt/etc/init.d/rc.unslung start
