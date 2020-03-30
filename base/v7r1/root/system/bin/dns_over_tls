@@ -1,0 +1,31 @@
+#!/system/bin/busybox sh
+set -e
+
+CFILE="/data/userdata/dns_over_tls"
+
+if [[ ! "$1" ]];
+then
+    echo "$0 0 - disable DNS over TLS"
+    echo "$0 1 - enable DNS over TLS"
+    echo "$0 2 - enable DNS over TLS with adblock"
+    echo "Cloudflare and Google servers are used by default."
+    echo "Check DNS over TLS configuration in /etc/stubby/stubby.yml"
+    # Make sure the file exist
+    touch "$CFILE"
+    AB_ENABLED="$(cat $CFILE)"
+    [[ "$AB_ENABLED" == "1" ]] && AB_ENABLED="enabled"
+    [[ "$AB_ENABLED" == "2" ]] && AB_ENABLED="enabled + adblock"
+    [[ "$AB_ENABLED" == "0" ]] || [[ "$AB_ENABLED" == "" ]] && AB_ENABLED="disabled"
+    echo "DNS over TLS status: $AB_ENABLED"
+    echo "WARNING! DNS over TLS disables IPv6 DNS queries from the device!"
+    exit 1
+fi
+
+if [[ "$1" != "0" ]] && [[ "$1" != "1" ]] && [[ "$1" != "2" ]];
+then
+    echo "Wrong value!"
+    exit 2
+fi
+
+echo "$1" > $CFILE
+/etc/dns_over_tls.sh "$1"

@@ -1,0 +1,82 @@
+#!/system/bin/busybox sh
+
+# Copyright (c) 2005-2018 OpenVPN Inc
+# Licensed under the GPL version 2
+
+# First version by Jesse Adelman
+# someone at boldandbusted dink com
+# http://www.boldandbusted.com/
+
+# Modified for Huawei E5372 router by ValdikSS
+# iam@valdikss.org.ru
+
+# ORIGINAL PURPOSE: This script automatically sets the proper /etc/resolv.conf entries
+# as pulled down from an OpenVPN server.
+
+# HUAWEI PURPOSE: This script calls "dns-redir.sh" which setup iptables DNS redirection
+# to first VPN DNS server.
+
+# This runs with the context of the OpenVPN UID/GID 
+# at the time of execution. This generally means that
+# the client "up" script will run fine, but the "down" script
+# will require the use of the OpenVPN "down-root" plugin
+# which is in the plugins/ directory of the OpenVPN source tree
+
+# A horrid work around, from a security perspective,
+# is to run OpenVPN as root. THIS IS NOT RECOMMENDED. You have
+# been WARNED.
+PATH=/bin:/sbin:/app/bin:/system/sbin:/system/bin:/system/xbin
+
+# init variables
+
+i=1
+domains=
+fopt=
+ndoms=0
+nns=0
+nl='
+'
+
+# $foreign_option_<n> is something like
+# "dhcp-option DOMAIN example.com" (multiple allowed)
+# or
+# "dhcp-option DNS 10.10.10.10" (multiple allowed)
+
+# each DNS option becomes a "nameserver" option in resolv.conf
+# if we get one DOMAIN, that becomes "domain" in resolv.conf
+# if we get multiple DOMAINS, those become "search" lines in resolv.conf
+# if we get no DOMAINS, then don't use either domain or search.
+
+while true; do
+  eval fopt=\$foreign_option_${i}
+  [ -z "${fopt}" ] && break
+
+  case ${fopt} in
+		dhcp-option\ DNS\ *)
+           nns=$((nns + 1))
+           if [ $nns -le 1 ]; then
+             /system/bin/openvpn_scripts/dns-redir.sh "${fopt#dhcp-option DNS }"
+           else
+             printf "%s\n" "Too many nameservers - ignoring after first" >&2
+           fi
+           ;;
+        *)
+           printf "%s\n" "Unknown option \"${fopt}\" - ignored" >&2
+           ;;
+	esac
+  i=$((i + 1))
+done
+
+# Add MASQUERADE to tun/tap interfaces
+xtables-multi iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
+xtables-multi iptables -t nat -I POSTROUTING -o tap+ -j MASQUERADE
+
+# Add DROP rule to FORWARD chain
+xtables-multi iptables -A FIREWALL_FORWARD -i tun+ -j DROP
+xtables-multi iptables -A FIREWALL_FORWARD -i tap+ -j DROP
+
+# Add DROP rule to INPUT chain
+xtables-multi iptables -A FIREWALL_INPUT -i tun+ -j DROP
+xtables-multi iptables -A FIREWALL_INPUT -i tap+ -j DROP
+
+exit 0

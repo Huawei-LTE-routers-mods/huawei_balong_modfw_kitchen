@@ -1,0 +1,10 @@
+#!/system/bin/busybox sh
+
+# Network up script.
+# This script is called by oled_hijack.so when the network goes up
+# or when it changes etc.
+# by ValdikSS
+# iam@valdikss.org.ru
+
+# Trigger reconnection if OpenVPN is running
+pidof openvpn && killall -USR1 openvpn

@@ -1,0 +1,48 @@
+#!/system/bin/busybox sh
+
+# Copyright (c) 2005-2018 OpenVPN Inc
+# Licensed under the GPL version 2
+
+# First version by Jesse Adelman
+# someone at boldandbusted dink com
+# http://www.boldandbusted.com/
+
+# Modified for Huawei E5372 router by ValdikSS
+# iam@valdikss.org.ru
+
+# ORIGINAL PURPOSE: This script automatically removes the /etc/resolv.conf entries previously
+# set by the companion script "client.up".
+
+# HUAWEI PURPOSE: This script calls "dns-redir.sh" which setup iptables DNS redirection
+# to first VPN DNS server.
+
+# This runs with the context of the OpenVPN UID/GID 
+# at the time of execution. This generally means that
+# the client "up" script will run fine, but the "down" script
+# will require the use of the OpenVPN "down-root" plugin
+# which is in the plugins/ directory of the OpenVPN source tree
+# The config example above would have to be changed to:
+#   client
+#   up /etc/openvpn/client.up
+#   plugin openvpn-plugin-down-root.so "/etc/openvpn/client.down"
+
+# A horrid work around, from a security perspective,
+# is to run OpenVPN as root. THIS IS NOT RECOMMENDED. You have
+# been WARNED.
+PATH=/bin:/sbin:/app/bin:/system/sbin:/system/bin:/system/xbin
+
+/system/bin/openvpn_scripts/dns-redir.sh 0
+
+# Remove MASQUERADE to tun/tap interfaces
+xtables-multi iptables -t nat -D POSTROUTING -o tun+ -j MASQUERADE
+xtables-multi iptables -t nat -D POSTROUTING -o tap+ -j MASQUERADE
+
+# Remove DROP rule from FORWARD chain
+xtables-multi iptables -A FIREWALL_FORWARD -i tun+ -j DROP
+xtables-multi iptables -A FIREWALL_FORWARD -i tap+ -j DROP
+
+# Remove DROP rule from INPUT chain
+xtables-multi iptables -A FIREWALL_INPUT -i tun+ -j DROP
+xtables-multi iptables -A FIREWALL_INPUT -i tap+ -j DROP
+
+exit 0

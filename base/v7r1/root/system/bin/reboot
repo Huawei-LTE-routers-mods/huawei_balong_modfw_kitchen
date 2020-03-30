@@ -1,0 +1,2 @@
+#!/system/bin/busybox sh
+atc 'at^reset'

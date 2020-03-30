@@ -1,0 +1,13 @@
+#!/system/bin/busybox sh
+set -e
+
+if [[ ! "$1" ]];
+then
+    echo "$0 [VALUE]"
+    echo "Current IMEI:" "$(atc 'AT+CGSN' | grep -o '[0-9]\{15\}')"
+    exit 1
+fi
+
+[[ "${#1}" != "15" ]] && echo "Wrong value!" && exit 2
+
+atc "at^cimei=\"$1\""

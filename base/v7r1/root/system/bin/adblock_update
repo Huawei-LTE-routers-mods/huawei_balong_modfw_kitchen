@@ -1,0 +1,14 @@
+#!/system/bin/busybox sh
+set -e
+
+CTEMPFILE="/var/adblock_list"
+CFILE="/system/etc/dnsmasq-adblock-list.conf"
+
+curl --compressed https://schakal.ru/hosts/alive_hosts_mail_fb.txt \
+| awk '{sub("\r$", ""); sub("^www\\.", "", $2); if ($0 && $0 !~ /^#/ && $2 && $2 !~ /^$/ && $2 != "localhost") print "server=/" $2 "/";}' \
+| sort -u > "$CTEMPFILE"
+
+mount -o remount,rw /system
+rm "$CFILE"
+mv "$CTEMPFILE" "$CFILE"
+mount -o remount,ro /system

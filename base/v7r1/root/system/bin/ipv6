@@ -1,0 +1,31 @@
+#!/system/bin/busybox sh
+set -e
+
+if [[ ! "$1" ]];
+then
+    echo "$0 [0 or 1]"
+    echo "This script controls IPv6 support and PDP Address."
+    echo "Device will be rebooted!"
+    exit 1
+fi
+
+if [[ "$1" != "0" ]] && [[ "$1" != "1" ]];
+then
+    echo "Wrong value!"
+    exit 2
+fi
+
+mount -o remount,rw /app/webroot
+if [[ "$1" == "0" ]]
+then
+    cp /system/usr/ipv6_webconfig/config_v4.xml /app/webroot/WebApp/common/config/lan/config.xml
+else
+    # Enable IPv6 enabling functionality
+    # Does not enable IPv6 support unless enabled in web interface
+    # configuration files, just allows it to be enabled
+    atc 'at^nvwr=8514,4,01 04 00 00'
+
+    cp /system/usr/ipv6_webconfig/config_v6.xml /app/webroot/WebApp/common/config/lan/config.xml
+fi
+
+reboot

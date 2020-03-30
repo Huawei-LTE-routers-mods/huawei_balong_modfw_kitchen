@@ -1,0 +1,112 @@
+#!/system/bin/busybox sh
+
+if [[ "$1" == "" ]];
+then
+    echo -n "Entware status: "
+    [ -f /opt/bin/busybox ] && echo "installed" || echo "not installed"
+    if [ -f /opt/bin/busybox ]; then
+        echo -n "Autorun status: "
+        [ -f /data/userdata/entware_autorun ] && \
+            echo "enabled" || echo "disabled"
+    fi
+    echo
+    echo "Type 'entware install' to install or 'entware remove' to remove."
+    echo "Entware installer requires internet connection."
+    echo
+    echo "Login to Entware Shell with 'entware shell' first, then"
+    echo "use 'opkg' to install new software."
+    echo "All Entware files could be found in /opt."
+    echo
+    echo "Entware autorun is not enabled by default."
+    echo "Run 'entware enable' to enable it"
+    echo
+    echo "WARNING: autorun may render your device unbootable"
+    echo "in case of service misconfiguration or excessive"
+    echo "memory consumption!"
+    exit
+fi
+
+if [[ "$1" == "install" ]] && [ -f /opt/bin/busybox ];
+then
+    echo "Entware is already installed."
+    echo "Login to Entware Shell with 'entware shell' first, then"
+    echo "use 'opkg' to install new software."
+    echo "All Entware files could be found in /opt."
+    echo "Entware autorun is not enabled by default."
+    echo "Run 'entware enable' to enable it"
+    echo
+    echo "WARNING: autorun may render your device unbootable"
+    echo "in case of service misconfiguration or excessive"
+    echo "memory consumption!"
+    echo
+    echo "Run 'entware remove' to remove Entware."
+    exit
+fi
+
+if [[ "$1" == "install" ]];
+then
+  if wget -O /opt/alternative.sh \
+   http://bin.entware.net/armv7sf-k2.6/installer/alternative.sh;
+  then
+    # Removing Android Toolbox /bin/sh symlink from ramfs
+    rm /bin/sh
+    # Linking Busybox ash to /bin/sh
+    ln -s /system/bin/busybox /bin/sh
+    # Creating gzip-gunzip wrapper script needed for opkg
+    echo -e '#!/system/bin/busybox sh\nexec gunzip $@' > /bin/gzip
+    chmod +x /bin/gzip
+
+    chmod +x /opt/alternative.sh
+    # Prevent execution of locale generation since it requires 128+ MB RAM
+    mkdir -p /opt/usr/lib/locale/
+    touch /opt/usr/lib/locale/locale-archive
+
+    if /opt/alternative.sh; then
+        rm /opt/alternative.sh
+        rm /bin/gzip
+        # Downloading locale archive manually
+        wget http://pkg.entware.net/binaries/other/locale-archive.2.23 \
+         -O /opt/usr/lib/locale/locale-archive
+        echo
+        echo "Now type 'entware shell' to access Entware shell!"
+    else
+        echo "Error: can't install Entware! Check for errors and try again."
+    fi
+  else
+    echo
+    echo "Error: can't download Entware installer!"
+  fi
+fi
+
+if [ ! -f /opt/bin/busybox ];
+then
+    if [[ "$1" == "remove" ]] || [[ "$1" == "shell" ]];
+    then
+        echo "Entware is not installed yet!"
+        exit
+    fi
+fi
+
+if [[ "$1" == "remove" ]];
+then
+    chmod +x /opt/etc/init.d/rc.unslung
+    /opt/etc/init.d/rc.unslung stop
+    rm -rf /opt/* /opt/.*
+    echo "Entware uninstalled."
+    echo "Now type 'exit' and re-login!"
+fi
+
+if [[ "$1" == "enable" ]];
+then
+    touch /data/userdata/entware_autorun
+fi
+
+if [[ "$1" == "disable" ]];
+then
+    rm /data/userdata/entware_autorun
+fi
+ 
+if [[ "$1" == "shell" ]];
+then
+    /opt/bin/sh -l
+fi

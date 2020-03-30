@@ -1,0 +1,23 @@
+
+    Run `passwd` command to change telnet password.
+
+    Use `ttl [VALUE]` to set outbound TTL. Example:
+      ttl 64    <- Set outbound TTL to 64
+      ttl 0     <- Disable TTL mangling function
+
+    Run `imei [VALUE]` to change IMEI. Example:
+      imei 12345678901234
+
+    Execute `anticensorship [VALUE]` to enable
+    local transparent censorship circumvention
+    proxy.
+
+    `dns_over_tls` is for DNS over TLS and
+    advertisement blocking.
+    `adblock_update` to update adblock lists.
+
+    Execute `ipv6` to enable or disable IPv6 support
+
+    `entware` is for Entware software repository.
+
+

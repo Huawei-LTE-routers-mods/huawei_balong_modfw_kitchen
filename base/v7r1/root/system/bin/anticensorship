@@ -1,0 +1,25 @@
+#!/system/bin/busybox sh
+set -e
+
+CFILE="/data/userdata/anticensorship"
+
+if [[ ! "$1" ]];
+then
+    echo "$0 [0 or 1]"
+    # Make sure the file exist
+    touch "$CFILE"
+    AC_ENABLED="$(cat $CFILE)"
+    [[ "$AC_ENABLED" == "1" ]] && AC_ENABLED="enabled"
+    [[ "$AC_ENABLED" == "0" ]] || [[ "$AC_ENABLED" == "" ]] && AC_ENABLED="disabled"
+    echo "Anticensorship status: $AC_ENABLED"
+    exit 1
+fi
+
+if [[ "$1" != "0" ]] && [[ "$1" != "1" ]];
+then
+    echo "Wrong value!"
+    exit 2
+fi
+
+echo "$1" > $CFILE
+/etc/anticensorship.sh "$1"

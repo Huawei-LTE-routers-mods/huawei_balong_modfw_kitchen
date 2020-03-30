@@ -1,0 +1,20 @@
+#!/system/bin/busybox sh
+set -e
+
+CFILE="/data/userdata/fix_ttl"
+
+if [[ ! "$1" ]];
+then
+    echo "$0 [VALUE]"
+    # Make sure the file exist
+    touch "$CFILE"
+    TTL="$(cat $CFILE)"
+    [[ "$TTL" == "1" ]] && TTL="64"
+    [[ "$TTL" == "0" ]] || [[ "$TTL" == "" ]] && TTL="disabled"
+    echo "TTL mangling: $TTL"
+    exit 1
+fi
+
+[[ "$1" -gt 255 ]] || [[ "$1" -lt 0 ]] && echo "Wrong value!" && exit 2
+
+echo "$1" > "$CFILE"
