@@ -1,0 +1,11 @@
+#!/system/bin/busybox sh
+
+# Network up script.
+# This script is called by oled_hijack.so (OLED extended menu library) when the network goes UP
+# or when it changes, when mobile network is switched to Wi-Fi Extender etc.
+# by ValdikSS
+# iam@valdikss.org.ru
+
+# Trigger OpenVPN reconnection
+# Uncomment to enable
+#killall -USR1 openvpn
