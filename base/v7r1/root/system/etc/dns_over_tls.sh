@@ -4,6 +4,8 @@
 # Outgoing IPv6 DNS queries are dropped if performed by the device itself (i.e. if the user uses on-device DNS).
 # IPv6 DNS queries to other IPv6 addresses from users still work, as well as IPv6 queries to the device' IPv6 DNS.
 
+export LD_LIBRARY_PATH="/app/lib:/system/lib:/system/lib/glibc"
+
 CFILE="/data/userdata/dns_over_tls"
 CPORT="5353"
 
