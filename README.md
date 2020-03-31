@@ -8,7 +8,7 @@ This script is made to port such universal modifications to any device in automa
 
 ### Modifications
 
-Currently there's Balong V7R11 family files present in this repository, for devices without OLED screen.
+Currently there's Balong V7R1, V7R2 and V7R11 family files present in this repository, for devices with and without OLED screen.
 
 Features:
 
