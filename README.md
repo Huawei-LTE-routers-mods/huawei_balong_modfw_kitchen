@@ -25,7 +25,7 @@ Features:
 * Unsigned kernel module loading patch (for 21.333+ firmware versions)
 * OpenVPN (version 2.4.8, compiled with OpenSSL 1.0.2t) and scripts for DNS redirection
 * curl (version 7.67.0, compiled with OpenSSL 1.0.2t)
-* Script for installing Entware application repository
+* Script for installing Entware application repository with [more than 2500 packages available](http://bin.entware.net/armv7sf-k3.2/Packages.html)
 * "adblock_update" script for updating the list of advertising domains
 * Removed mobile connection logging (mobile logger) to extend flash memory lifetime
 
