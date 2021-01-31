@@ -19,12 +19,12 @@ Features:
 * "ttl" script to modify (fix) TTL (for IPv4) and HL (for IPv6) of forwarded packets
 * "imei" script to change IMEI
 * A local transparent proxy server "tpws" and a script "anticensorship" to circumvent censorship to sites from the registry of prohibited sites in Russian Federation (IPv4 only)
-* DNS over TLS resolver stubby (version 1.5.2, compiled with OpenSSL 1.0.2t) and DNS-level adblock (IPv4 only)
+* DNS over TLS resolver stubby (version 1.5.2, compiled with OpenSSL 1.0.2u) and DNS-level adblock (IPv4 only)
 * Unlock of all NVRAM items
 * AT^DATALOCK unlock patch
 * Unsigned kernel module loading patch (for 21.333+ firmware versions)
-* OpenVPN (version 2.4.8, compiled with OpenSSL 1.0.2t) and scripts for DNS redirection
-* curl (version 7.67.0, compiled with OpenSSL 1.0.2t)
+* OpenVPN (version 2.5.0, compiled with OpenSSL 1.0.2u) and scripts for DNS redirection
+* curl (version 7.74.0, compiled with OpenSSL 1.0.2u)
 * Script for installing Entware application repository with [more than 2500 packages available](http://bin.entware.net/armv7sf-k3.2/Packages.html)
 * "adblock_update" script for updating the list of advertising domains
 * Removed mobile connection logging (mobile logger) to extend flash memory lifetime
