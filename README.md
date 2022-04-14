@@ -68,3 +68,7 @@ Add your device folder into `device_overlay` and execute the script.
 build.sh <balong family from base folder> <device name from device_overlay> <original firmware directory>
 Example: build.sh v7r11 e8372h-153_zong_21.333.64.00.1456 orig_fw
 ```
+
+Original firmware directory should contain `system` and `app` directories with files from corresponding partitions. Do get this structure, the firmware should be unpacked first (could be done with [balongflash](https://github.com/forth32/balongflash/)), then the `system` and `app` partitions should be unpacked with `cpio -iv < file.bin` command.
+
+Modem families (V7R1/V7R11 etc) are described in [balong_series](https://github.com/Huawei-LTE-routers-mods/README/blob/master/balong_series.md) document.
